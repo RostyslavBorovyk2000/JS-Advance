@@ -32,22 +32,32 @@ class Card {
             <h4 class="name-user">${user.name}</h4>
             <p class="post">${post.title}</p>
             <p class="body-key">${post.body}</p>
-            <button class="btn-delete">Видалити</button>
+            <button class="btn-delete" id="${post.id}" >Видалити</button>
           </div>`);
                     }
                 }
             });
         });
 
-        const btn = document.querySelectorAll('.btn-delete');
-        console.log(btn)
-
+        const btnDelete = document.querySelectorAll('.btn-delete');
+        btnDelete.forEach(element => {
+            element.addEventListener('click', event => {
+                const cardId = event.target.id;
+                const cardElement = event.target.closest('.card');
+                axios.delete(`https://ajax.test-danit.com/api/json/posts/${cardId}`)
+                    .then(response => {
+                       if(response.status === 2000 || cardId !== cardElement ){
+                           cardElement.remove()
+                       }
+                    })
+                    .catch(error => {
+                        console.error('Помилка при отриманні даних:', error);
+                    });
+            });
+        });
     }
 }
 new Card().fetchData();
-
-
-
 
 
 
